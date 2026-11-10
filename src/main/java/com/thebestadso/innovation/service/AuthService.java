@@ -2,10 +2,12 @@ package com.thebestadso.innovation.service;
 
 import java.util.Optional;
 
+import org.apache.catalina.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.thebestadso.innovation.dto.HttpGlobalResponseDTO;
+import com.thebestadso.innovation.dto.LoginRequestDTO;
 import com.thebestadso.innovation.dto.LoginResponseDTO;
 import com.thebestadso.innovation.dto.RegisterRequestDTO;
 import com.thebestadso.innovation.dto.UserDTO;
@@ -47,6 +49,44 @@ public class AuthService {
      * @return
      * @throws Exception
      */
+
+    public HttpGlobalResponseDTO<LoginResponseDTO> login(LoginRequestDTO loginDto){
+        HttpGlobalResponseDTO<LoginResponseDTO> response = new HttpGlobalResponseDTO<>();
+        LoginResponseDTO loginResponse = new LoginResponseDTO();
+
+        Optional<Users>userFound = userRepository.findByEmail(loginDto.getEmail());
+
+        if (userFound.isEmpty()) {
+
+            response.setMessage("User not found");
+            loginResponse.setJwt(null);
+            response.setData(loginResponse);   
+            return response;
+
+        }
+
+        Users user = userFound.get();
+
+        Boolean matches = passwordEncoder.matches(loginDto.getPassword(), user.getPassword());
+        if (!matches) {
+
+            response.setMessage("password invalid");
+            loginResponse.setJwt(null);
+            response.setData(loginResponse);   
+            return response;
+            
+        }
+
+        String tokenAccess= jwtService.generateToken(user.getId(),user.getUsername(),user.getRolId() );
+
+        response.setMessage("User authenticated");
+        loginResponse.setJwt(tokenAccess);
+        response.setData(loginResponse);
+        return response;
+
+    }
+
+
     public HttpGlobalResponseDTO<LoginResponseDTO> refreshToken(String token) throws Exception {
         HttpGlobalResponseDTO<LoginResponseDTO> response = new HttpGlobalResponseDTO<>();
         LoginResponseDTO refresh = new LoginResponseDTO();

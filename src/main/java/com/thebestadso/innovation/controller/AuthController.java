@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thebestadso.innovation.dto.HttpGlobalResponseDTO;
+import com.thebestadso.innovation.dto.LoginRequestDTO;
 import com.thebestadso.innovation.dto.LoginResponseDTO;
 import com.thebestadso.innovation.dto.RegisterRequestDTO;
 import com.thebestadso.innovation.dto.UserDTO;
@@ -22,6 +23,20 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final AuthService authService;
+
+    @PostMapping("login")
+    public ResponseEntity<HttpGlobalResponseDTO<LoginResponseDTO>> login(@Valid @RequestBody LoginRequestDTO loginDto) {
+
+        try {
+            HttpGlobalResponseDTO<LoginResponseDTO> response = authService.login(loginDto);
+            return  ResponseEntity.status(HttpStatus.OK).body(response);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+    
 
     @PostMapping("refresh")
     public ResponseEntity<HttpGlobalResponseDTO<LoginResponseDTO>> refreshToken(HttpServletRequest request) {
