@@ -2,7 +2,6 @@ package com.thebestadso.innovation.service;
 
 import java.util.Optional;
 
-import org.apache.catalina.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

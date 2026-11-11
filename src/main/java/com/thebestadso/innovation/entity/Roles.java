@@ -8,9 +8,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+
+
 @Entity
-@Data
-@Table(name = "roles")
+@Data 
+@Table (name = "roles")
 public class Roles {
 
     @Id // Primary key

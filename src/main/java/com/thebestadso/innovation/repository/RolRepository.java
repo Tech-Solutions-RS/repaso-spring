@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import com.thebestadso.innovation.entity.Roles;
 
+
+
 @Repository 
 public interface RolRepository extends JpaRepository<Roles, Long>{
     
